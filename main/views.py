@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import ProblemSerializer, CommentSerializer, ReplySerializer
-from .models import Reply, Comment, Problem
+from .serializers import ProblemSerializer, CommentSerializer, ReplySerializer, FavoriteSerializer
+from .models import Reply, Comment, Problem, Favorite
 from main.permissions import IsAuthorPermission
 from rest_framework import filters as rest_filters
 from django_filters import rest_framework as filters
@@ -36,6 +36,11 @@ class ProblemViewset(PermissionMixin, ModelViewSet):
         return context
 
 
+class FavoriteViewset(PermissionMixin, ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+
+
 class ReplyViewset(PermissionMixin, ModelViewSet):
     queryset = Reply.objects.all()
     serializer_class = ReplySerializer
@@ -65,4 +70,4 @@ class CommentViewset(PermissionMixin, ModelViewSet):
     filterset_fields = ['created', 'author']
     search_fields = ['text', ]
 
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]

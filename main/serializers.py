@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import (Problem, Picture, Reply, Comment)
+from .models import (Problem, Picture, Reply, Comment, Favorite)
 
 
 class PictureSerializer(serializers.ModelSerializer):
@@ -62,6 +62,22 @@ class ProblemSerializer(serializers.ModelSerializer):
         return representation
 
 
+class FavoriteSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.email')
+    class Meta:
+        model = Favorite
+        fields = '__all__'
+
+        def create(self, validated_data):
+            request = self.context.get('request')
+            favorite = Favorite.objects.create(
+                author=request.user,
+                **validated_data
+            )
+            return favorite
+
+
+
 class ReplySerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.email')
     class Meta:
@@ -76,19 +92,27 @@ class ReplySerializer(serializers.ModelSerializer):
         )
         return reply
 
-    def to_representation(self, instance):
-        represenatation = super().to_representation(instance)
-        action = self.context.get('action')
-        if action == 'list':
-            represenatation['comments'] = instance.comments.count()
-        elif action == 'retrieve':
-            represenatation['comments'] = CommentSerializer(
-                instance.comments.all(), many=True
-            ).data
-        return represenatation
+    # def to_representation(self, instance):
+    #     represenatation = super().to_representation(instance)
+    #     action = self.context.get('action')
+    #     if action == 'list':
+    #         represenatation['comments'] = instance.comments.count()
+    #     elif action == 'retrieve':
+    #         represenatation['comments'] = CommentSerializer(
+    #             instance.comments.all(), many=True
+    #         ).data
+    #     rating_list = []
+    #     for review in represenatation['reviews']:
+    #         rating_list.append(review['rating'])
+    #     try:
+    #         represenatation['reply_rating'] = round(sum(rating_list) / len(rating_list), 2)
+    #     except ZeroDivisionError:
+    #         represenatation['reply_rating'] = None
+    #     return represenatation
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.email')
+
     class Meta:
         model = Comment
         fields = '__all__'

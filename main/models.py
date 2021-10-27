@@ -2,6 +2,7 @@ from django.db import models
 from main.tasks import notify_user_task
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from model_utils import Choices
 
 
 class Created(models.Model):
@@ -28,9 +29,17 @@ class Problem(Created):
         'accounts.User', on_delete=models.CASCADE,
         related_name='problems'
     )
+    # rating = models.PositiveIntegerField(choices=Created.RATING)
 
     def __str__(self):
         return self.title
+
+
+class Favorite(Created):
+    problem = models.ForeignKey(
+        Problem, on_delete=models.CASCADE,
+        related_name='favorites'
+    )
 
 
 class Picture(Created):
@@ -72,6 +81,7 @@ class Comment(Created):
         Reply, on_delete=models.CASCADE,
         related_name='comments'
     )
+    # rating = models.PositiveIntegerField(choices=Created.RATING)
 
     def __str__(self):
         return self.text
