@@ -6,13 +6,14 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from main.views import ProblemViewset, ReplyViewset, CommentViewset, FavoriteViewset
+from main.views import ProblemViewset, ReplyViewset, CommentViewset, FavoriteViewset, RatingViewset
 
 router = DefaultRouter()
 router.register('problems', ProblemViewset)
 router.register('replies', ReplyViewset)
 router.register('comments', CommentViewset)
 router.register('favorites', FavoriteViewset)
+router.register('rating', RatingViewset)
 
 schema_view = get_schema_view(
    openapi.Info(

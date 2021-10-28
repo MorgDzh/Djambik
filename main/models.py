@@ -87,6 +87,18 @@ class Comment(Created):
         return self.text
 
 
+class Rating(Created):
+    problem = models.ForeignKey(
+        Problem, on_delete=models.CASCADE,
+        related_name='rating'
+    )
+    author = models.ForeignKey(
+        'accounts.User', on_delete=models.CASCADE,
+        related_name='rating', null=True
+    )
+    rating = models.PositiveIntegerField()
+
+
 @receiver(post_save, sender=Problem)
 def notify_user(sender, instance, created, **kwargs):
     if created:

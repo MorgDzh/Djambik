@@ -1,10 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import ProblemSerializer, CommentSerializer, ReplySerializer, FavoriteSerializer
-from .models import Reply, Comment, Problem, Favorite
+from .serializers import ProblemSerializer, CommentSerializer, ReplySerializer, FavoriteSerializer, \
+    RatingSerializer
+from .models import Reply, Comment, Problem, Favorite, Rating
 from main.permissions import IsAuthorPermission
-from rest_framework import filters as rest_filters
+from rest_framework import filters as rest_filters, viewsets
 from django_filters import rest_framework as filters
 
 class PermissionMixin:
@@ -71,3 +72,17 @@ class CommentViewset(PermissionMixin, ModelViewSet):
     search_fields = ['text', ]
 
     permission_classes = [IsAuthenticated]
+
+
+class RatingViewset(PermissionMixin, viewsets.ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+
+    def get_serializer_context(self):
+        return {
+            'request': self.request
+        }
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs['context'] = self.get_serializer_context()
+        return self.serializer_class(*args, **kwargs)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import (Problem, Picture, Reply, Comment, Favorite)
+from .models import (Problem, Picture, Reply, Comment, Favorite, Rating)
 
 
 class PictureSerializer(serializers.ModelSerializer):
@@ -124,5 +124,35 @@ class CommentSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return comment
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    post_title = serializers.SerializerMethodField("get_post_title")
+
+    class Meta:
+        model = Rating
+        # fields = 'all'
+        exclude = ('author',)
+
+    def get_post_title(self, rating):
+        title = rating.problem.title
+        return title
+
+    def validate_rating(self, rating):
+        if rating not in range(1, 6):
+            raise serializers.ValidationError(
+                "Рейтинг должен быть от 1 до 5"
+            )
+        return rating
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        request = self.context.get('request')
+        # print(dir(instance) ,'Hellooooooo')
+        if not request.user.is_anonymous:
+            representation['author'] = request.user.email
+
+        return representation
+
 
 
