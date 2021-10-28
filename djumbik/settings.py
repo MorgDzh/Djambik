@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'main',
     'django_filters',
     'drf_yasg',
+    'likes.apps.LikesConfig',
 ]
 
 MIDDLEWARE = [

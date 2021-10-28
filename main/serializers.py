@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from likes import services as likes_services
+# from likes.serializers import FanSerializer
 
 from .models import (Problem, Picture, Reply, Comment, Favorite, Rating)
 
@@ -13,7 +15,12 @@ class ProblemSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.email')
     class Meta:
         model = Problem
-        fields = ('id', 'title', 'description', 'author')
+        fields = ('id', 'title', 'description', 'author', 'total_likes', 'if_fan')
+
+    def get_is_fan(self, obj) -> bool:
+        request = self.context.get('request')
+        if request:
+            return likes_services.is_fan(obj, request.user)
 
     def create(self, validated_data):
         request = self.context.get('request')

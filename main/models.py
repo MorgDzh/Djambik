@@ -3,6 +3,8 @@ from main.tasks import notify_user_task
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from model_utils import Choices
+from django.contrib.contenttypes.fields import GenericRelation
+from likes.models import Like
 
 
 class Created(models.Model):
@@ -29,10 +31,15 @@ class Problem(Created):
         'accounts.User', on_delete=models.CASCADE,
         related_name='problems'
     )
+    likes = GenericRelation(Like, null=True, blank=True)
     # rating = models.PositiveIntegerField(choices=Created.RATING)
 
     def __str__(self):
         return self.title
+
+    @property
+    def total_likes(self):
+        return self.likes.count()
 
 
 class Favorite(Created):

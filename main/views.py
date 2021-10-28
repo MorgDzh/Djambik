@@ -7,6 +7,7 @@ from .models import Reply, Comment, Problem, Favorite, Rating
 from main.permissions import IsAuthorPermission
 from rest_framework import filters as rest_filters, viewsets
 from django_filters import rest_framework as filters
+from likes.mixins import LikedMixin
 
 class PermissionMixin:
     def get_permissions(self):
@@ -19,10 +20,10 @@ class PermissionMixin:
 
         return [permission() for permission in permissions]
 
-class ProblemViewset(PermissionMixin, ModelViewSet):
+class ProblemViewset(PermissionMixin, ModelViewSet, LikedMixin):
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
-    # permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenlikesticated]
 
     filter_backends = [
         filters.DjangoFilterBackend,
