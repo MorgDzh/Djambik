@@ -13,9 +13,10 @@ class PictureSerializer(serializers.ModelSerializer):
 
 class ProblemSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.email')
+    is_fan = serializers.SerializerMethodField()
     class Meta:
         model = Problem
-        fields = ('id', 'title', 'description', 'author', 'total_likes', 'if_fan')
+        fields = ('id', 'title', 'description', 'author', 'total_likes', 'is_fan',)
 
     def get_is_fan(self, obj) -> bool:
         request = self.context.get('request')

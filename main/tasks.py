@@ -10,3 +10,7 @@ def notify_user_task(email):
         [email, ]
     )
     return "sucess"
+
+
+
+

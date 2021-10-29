@@ -13,7 +13,7 @@ class PermissionMixin:
     def get_permissions(self):
         if self.action == 'create':
             permissions = [IsAuthenticated]
-        elif self.action in ['update', 'partical_update', ]:
+        elif self.action in ['update', 'partical_update', 'destroy']:
             permissions = [IsAuthorPermission, ]
         else:
             permissions = []
@@ -23,7 +23,7 @@ class PermissionMixin:
 class ProblemViewset(PermissionMixin, ModelViewSet, LikedMixin):
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
-    # permission_classes = [IsAuthenlikesticated]
+    permission_classes = [IsAuthenticated]
 
     filter_backends = [
         filters.DjangoFilterBackend,
@@ -41,12 +41,13 @@ class ProblemViewset(PermissionMixin, ModelViewSet, LikedMixin):
 class FavoriteViewset(PermissionMixin, ModelViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class ReplyViewset(PermissionMixin, ModelViewSet):
     queryset = Reply.objects.all()
     serializer_class = ReplySerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     filter_backends = [
         filters.DjangoFilterBackend,
@@ -78,6 +79,7 @@ class CommentViewset(PermissionMixin, ModelViewSet):
 class RatingViewset(PermissionMixin, viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_context(self):
         return {
@@ -87,3 +89,6 @@ class RatingViewset(PermissionMixin, viewsets.ModelViewSet):
     def get_serializer(self, *args, **kwargs):
         kwargs['context'] = self.get_serializer_context()
         return self.serializer_class(*args, **kwargs)
+
+    filterset_fields = ['rating']
+    search_fields = ['problem']
