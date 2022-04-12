@@ -1,4 +1,4 @@
-# djambikProject
+# DjumbikProject
 Django Hackathon
 
 Whenever you are starting a new web development project, it’s a good idea to first set up your development environment. Create a new directory for your project to live in, and cd into it:
