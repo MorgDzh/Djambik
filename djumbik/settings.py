@@ -1,11 +1,17 @@
 
 from pathlib import Path
+import dj_database_url
+from decouple import config
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-s6j!!1i&v$21gn)3(ofbg!619z2uo^$(_@5ntnhak_rzd^ycae'
 
-DEBUG = True
+SECRET_KEY = config('SECRET_KEY')
+
+
+DEBUG = config('DEBUG', default=False, cast=bool)
+
 
 ALLOWED_HOSTS = []
 
@@ -73,16 +79,10 @@ REST_FRAMEWORK = {
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'djumbik',
-        'USER': 'aktan',
-        'PASSWORD': '1',
-        'HOST': 'localhost',
-        'PORT': 5432
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -129,9 +129,10 @@ REDIS_PORT = '6379'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "atai.tofik@gmail.com"
-EMAIL_HOST_PASSWORD = "AtaiTofik"
+
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
