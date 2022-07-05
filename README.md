@@ -1,26 +1,26 @@
-# Джанго
-## Шаблон бэка форума
+# Django
+## Forum back template
 
-### Установка
+### Installation
 
-#### 1) Первые шаги
-    Склонить репозиторий
-    Прописать свое подключение к БД в local_settings.py
+#### 1) First steps
+    Clone the repository.
+    Prescribe your connection to the database in local_settings.py
   
-#### 2) Создать виртуальное окружение
+#### 2) Create a virtual environment
     python -m venv venv
 
-#### 3) Активировать виртуальное окружение
+#### 3) Activate the virtual environment
     . venv/bin/activate
    
-#### 4) Установить зависимости:
+#### 4) Install dependencies:
     pip install -r req.txt
 
-#### 5) Выполнить команду для выполнения миграций
+#### 5) Run the command to perform migrations
     python manage.py migrate
 
-#### 6) Создать суперпользователя
+#### 6) Create a superuser
     python manage.py createsuperuser
 
-#### 7) Запустить сервер
+#### 7) Run the server
     python manage.py runserver
